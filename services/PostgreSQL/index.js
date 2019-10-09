@@ -20,14 +20,19 @@ const connect = () => {
 };
 
 // CREATE
-
+const create = () => {};
 // READ
-
+const read = () => {};
 // UPDATE
-
+const update = () => {};
 // DELETE
+const del = () => {};
 
 module.exports = {
 	connect,
-	client
+	client,
+	create,
+	read,
+	update,
+	del
 };
