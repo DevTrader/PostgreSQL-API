@@ -14,10 +14,16 @@ app.listen(PORT, () => {
 	console.log(`[Server listening on port ${PORT}]`);
 });
 
+// Middleware
+app.use(function(req, res, next) {
+	res.setHeader("content-type", "application/json");
+	next();
+});
+
 //Route Loader
 require("./routes")(app);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	next(createError(404));
+app.get("*", (req, res) => {
+	res.status(404);
+	res.send("Not Found");
 });

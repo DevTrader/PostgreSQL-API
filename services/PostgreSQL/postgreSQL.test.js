@@ -1,5 +1,8 @@
 const postgreSQL = require("./index");
 
+/**
+ * Sanity Checks: DB Setup
+ */
 describe("Database Setup", () => {
 	test("Connects to database successfully", async () => {
 		let connected = false;
@@ -15,14 +18,14 @@ describe("Database Setup", () => {
 });
 
 /**
- * CRUD Tests
+ * Sanity Checks: CRUD Tests
  */
-
 describe("Tests CRUD operations", () => {
 	test("Writes to database", async () => {
 		// will write
 		try {
-			await postgreSQL.create();
+			const data = await postgreSQL.create("test");
+			console.log("[DATA]", data);
 		} catch (e) {
 			console.log("[WRITING FAILED]", e);
 		}

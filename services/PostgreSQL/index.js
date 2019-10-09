@@ -6,27 +6,38 @@ const client = new Client({
 	ssl: true
 });
 
-// WILL BECOME QUERY
-const connect = () => {
-	client
-		.connect()
-		.then(() => {
-			console.log("[POSTGRESQL CONNECTED SUCCESSFULLY]");
-		})
-		.catch(err => {
-			console.log("[POSTGRESQL CONNECTION FAILED]", err);
-		})
-		.finally(() => client.end());
+const connect = async () => {
+	try {
+		await client.connect();
+		console.log("[POSTGRESQL CONNECTED SUCCESSFULLY]");
+	} catch (err) {
+		console.log("[POSTGRESQL FAILED]", err);
+	}
 };
 
 // CREATE
-const create = () => {};
+const create = async data => {
+	try {
+	} catch (err) {}
+};
+
 // READ
-const read = () => {};
+const read = async () => {
+	try {
+	} catch (err) {}
+};
+
 // UPDATE
-const update = () => {};
+const update = async () => {
+	try {
+	} catch (err) {}
+};
+
 // DELETE
-const del = () => {};
+const del = async () => {
+	try {
+	} catch (err) {}
+};
 
 module.exports = {
 	connect,
