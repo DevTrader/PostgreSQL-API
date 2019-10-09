@@ -12,7 +12,8 @@
   "dependencies": {
     "axios": "^0.19.0",
     "express": "^4.17.1",
-    "http-errors": "^1.7.3"
+    "http-errors": "^1.7.3",
+    "pg": "^7.12.1"
   },
   "devDependencies": {
     "jest": "^24.9.0"
