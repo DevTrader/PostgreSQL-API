@@ -4,8 +4,8 @@
   "description": "Node, Express and PostgreSQL Endpoint Design",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server",
-    "test": "jest"
+    "start": "nodemon -r dotenv/config server.js",
+    "test": "jest --setupFiles dotenv/config"
   },
   "author": "Nicolas Kao Sartor",
   "license": "ISC",

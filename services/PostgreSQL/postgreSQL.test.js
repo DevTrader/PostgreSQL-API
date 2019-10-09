@@ -1,12 +1,23 @@
 const postgreSQL = require("./index");
 
-test("Connects to database", async () => {
-	// will connect
+describe("Database Setup", () => {
+	test("Connects to database successfully", async () => {
+		let connected = false;
+		try {
+			await postgreSQL.client.connect();
+			client.end();
+			connected = true;
+		} catch (e) {
+			console.log("[CONNECTION FAILED]", e);
+		}
+		expect(connected).toBeTruthy();
+	});
 });
 
 /**
  * CRUD Tests
  */
+
 describe("Tests CRUD operations", () => {
 	test("Writes to database", async () => {
 		// will write

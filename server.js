@@ -4,8 +4,6 @@ const createError = require("http-errors");
 const baseDir = process.cwd();
 const PostgreSQL = require(baseDir + "/services/PostgreSQL/index.js");
 
-require("dotenv").config();
-
 const app = express();
 const PORT = process.env.PORT || "3000";
 
