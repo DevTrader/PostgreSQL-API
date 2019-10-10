@@ -20,37 +20,20 @@ const insert = async (keys, collection, data) => {
 	try {
 		await client.query(`insert into ${collection}(${keys}) values ($1)`, [data]);
 	} catch (err) {
-		console.log("[Error Inserting To Database]", err);
+		console.log("[Error Querying Database]", err);
 	}
 };
 
-// READ
-const read = async () => {
+const query = async query => {
 	try {
-		const data = await client.query(`select * from test`);
-		console.log(data.rows);
+		await client.query(query);
 	} catch (err) {
-		console.log("[Error Selecting From Database]", err);
+		console.log("[Error Querying Database]", err);
 	}
-};
-
-// UPDATE
-const update = async () => {
-	try {
-	} catch (err) {}
-};
-
-// DELETE
-const del = async () => {
-	try {
-	} catch (err) {}
 };
 
 module.exports = {
 	connect,
 	client,
-	insert,
-	read,
-	update,
-	del
+	query
 };

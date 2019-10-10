@@ -3,16 +3,19 @@ const createError = require("http-errors");
 
 const baseDir = process.cwd();
 const PostgreSQL = require(baseDir + "/services/PostgreSQL/index.js");
+const self = require(baseDir + "/services/self/index.js");
 
 const app = express();
 const PORT = process.env.PORT || "3000";
 
-PostgreSQL.connect();
+//PostgreSQL.connect();
 
 app.set("port", PORT);
 app.listen(PORT, () => {
 	console.log(`[Server listening on port ${PORT}]`);
 });
+
+self.initDatabase();
 
 // Middleware
 app.use(express.json());
