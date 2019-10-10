@@ -1,6 +1,6 @@
-# Stynx Challenge
+# Syntx Challenge
 
-## Stynx Challenge - About My Process
+## Syntx Challenge - About My Process
 
 This project was created following TDD and SOLID principles, deployed on Heroku (give a minute for the server to wake up, https://syntx.herokuapp.com, endpoints listed below).
 
@@ -22,7 +22,7 @@ All my services are tested with Jest.js, and DB credentials are stored as .env
 
 Error catching happens at the service level.
 
-## Stynx Challenge - Endpoints
+## Syntx Challenge - Endpoints
 
 #### GET All
 
