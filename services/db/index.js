@@ -25,16 +25,16 @@ const initDatabase = async () => {
 	await PostgreSQL.connect();
 
 	/**
-	 * Adds data to database, pg-format was giving errors when inserting 150 rows in a single query, so I'm looping
+	 * Adds data to database, pg-format was giving errors, so I'm looping my own query format
 	 */
 	// clears data
 	await clearBreweriesDB();
 
-	// forms pg friendly values for query
+	// forms pg friendly (and sanitized!) values for query
 	let data = await getExternalData();
 	let valStr = "";
 	for (let i = 0; i < data.length; i++) {
-		if (i === data.length - 1) {
+		if (i === data.length - 1 || data.length === 1) {
 			valStr += `($${i + 1})`;
 		} else {
 			valStr += `($${i + 1}), `;
@@ -62,7 +62,7 @@ const clearBreweriesDB = async () => {
 
 const retrieveAllBreweries = async () => {
 	try {
-		const res = await PostgreSQL.client.query(`select * from breweries`);
+		const res = await PostgreSQL.client.query(`select jsondata from breweries`);
 		return res.rows;
 	} catch (err) {
 		console.log("[ERROR Fetching All From DB]", err);
