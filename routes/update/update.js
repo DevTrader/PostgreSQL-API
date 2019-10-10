@@ -6,8 +6,16 @@ const db = require(baseDir + "/services/db/index.js");
 
 module.exports = app => {
 	app.post("/breweries/:id", async (req, res) => {
-		console.log(req.body);
 		// get brewery
-		const brewery = await db.retrieveBreweriesWithParams(req.params);
+		let brewery = await db.retrieveBreweriesWithParams(req.params);
+		brewery = brewery[0].jsondata;
+		if (req.body.brewery_type) {
+			req.body.brewery_type = req.body.brewery_type.toLowerCase();
+		}
+		brewery = { ...brewery, ...req.body };
+		await db.updateById(req.params.id, brewery);
+		const updated = await db.retrieveBreweriesWithParams(req.params);
+
+		res.send(updated);
 	});
 };

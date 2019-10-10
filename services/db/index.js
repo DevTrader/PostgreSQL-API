@@ -157,10 +157,7 @@ const retrieveBreweriesWithParams = async params => {
 const updateById = async (id, data) => {
 	// Update
 	try {
-		// const query = formParamQuery(params);
-		console.log("[before RES]", id, data);
 		const res = await PostgreSQL.client.query(`update breweries set jsondata = $1 where jsondata ->> 'id' = $2`, [data, id]);
-		console.log("[RES]", res);
 		return res.rows;
 	} catch (err) {
 		console.log("[ERROR Updating To DB]", err);
