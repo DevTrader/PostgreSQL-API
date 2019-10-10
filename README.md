@@ -29,7 +29,7 @@ All my services are tested with Jest.js, and DB credentials are stored as .env
 
 #### GET With Query
 
-**endpoint**: https://syntx.herokuapp.com/breweries?id=2&state=california
+**endpoint**: https://syntx.herokuapp.com/breweries?brewery_type=micro&state=california
 **description**: Can take any of the following parameters: "id","name","brewery_type","street","city","state","postal_code","country","longitude","latitude","phone","website_url","updated_at","tag_list"
 
 Retrieves all data that matches the query.
