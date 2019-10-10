@@ -2,7 +2,6 @@ const load = app => {
 	// data validation
 	app.use("/breweries/:id", (req, res, next) => {
 		const acceptedKeys = [
-			"id",
 			"name",
 			"brewery_type",
 			"street",
