@@ -32,11 +32,9 @@ const createQuery = breweries => {
  * Saves single brewery to self database
  */
 const saveBreweryToDB = async breweryData => {
-	try {
-		await PostgreSQL.client.query(`insert into breweries(jsondata, state, type) values ($1, $2, $3)`, [breweryData, breweryData.state, breweryData.brewery_type]);
-	} catch (err) {
-		console.log("[ERROR SAVING TO DB]", err);
-	}
+	return PostgreSQL.client
+		.query(`insert into breweries(jsondata, state, type) values ($1, $2, $3)`, [breweryData, breweryData.state, breweryData.brewery_type])
+		.catch(err => console.log("[ERROR SAVING TO DB]", err));
 };
 
 /**
@@ -46,11 +44,6 @@ const saveBreweryToDB = async breweryData => {
 const initDatabase = async () => {
 	// connects
 	await PostgreSQL.connect();
-	// clears data
-	await clearBreweriesDB();
-	// fetches data
-	let data = await getExternalData();
-
 	// Forming the query gets erros
 	// try {
 	// 	await PostgreSQL.client.query(createQuery(data));
@@ -62,11 +55,26 @@ const initDatabase = async () => {
 	/**
 	 * Adds data to database, pg-format was giving errors when inserting 150 rows in a single query, so I'm looping
 	 */
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
+		// Verfies data and return if data is valid
+		let rows = await retrieveAllBreweries();
+		if (rows.length === 150) {
+			console.log("[DATABASE READY]");
+			resolve();
+			return;
+		}
+		// clears data
+		await clearBreweriesDB();
+
+		// fetches data
+		let data = await getExternalData();
+
 		asyncLib.each(
 			data,
-			async brewery => {
-				await saveBreweryToDB(brewery);
+			(brewery, callback) => {
+				saveBreweryToDB(brewery).then(() => {
+					callback();
+				});
 			},
 			() => {
 				console.log("[DATABASE INITIALIZED]");
@@ -87,7 +95,14 @@ const clearBreweriesDB = async () => {
 	}
 };
 
-const retrieveAllBreweries = async () => {};
+const retrieveAllBreweries = async () => {
+	try {
+		const res = await PostgreSQL.client.query(`select * from breweries`);
+		return res.rows;
+	} catch (err) {
+		console.log("[ERROR Fetching All From DB]", err);
+	}
+};
 
 const retrieveBreweriesWithParams = async () => {};
 
