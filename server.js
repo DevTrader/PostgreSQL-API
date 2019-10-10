@@ -4,6 +4,7 @@ const createError = require("http-errors");
 const baseDir = process.cwd();
 const PostgreSQL = require(baseDir + "/services/PostgreSQL/index.js");
 const db = require(baseDir + "/services/db/index.js");
+const middleware = require(baseDir + "/middleware/index.js");
 
 const app = express();
 const PORT = process.env.PORT || "3000";
@@ -18,6 +19,8 @@ db.initDatabase();
 
 // Middleware
 app.use(express.json());
+
+middleware.load(app);
 
 app.use(function(req, res, next) {
 	res.setHeader("content-type", "application/json");

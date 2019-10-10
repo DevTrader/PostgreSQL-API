@@ -8,14 +8,18 @@ module.exports = app => {
 	app.post("/breweries/:id", async (req, res) => {
 		// get brewery
 		let brewery = await db.retrieveBreweriesWithParams(req.params);
-		brewery = brewery[0].jsondata;
-		if (req.body.brewery_type) {
-			req.body.brewery_type = req.body.brewery_type.toLowerCase();
+		if (!brewery[0]) {
+			res.status(404);
+			return res.send(`Brewery with ${id} not found`);
 		}
+		brewery = brewery[0].jsondata;
+		// form updated
 		brewery = { ...brewery, ...req.body };
+
 		await db.updateById(req.params.id, brewery);
+		// retrieve updated
 		const updated = await db.retrieveBreweriesWithParams(req.params);
 
-		res.send(updated);
+		return res.send(updated);
 	});
 };
