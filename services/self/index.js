@@ -16,73 +16,38 @@ const getExternalData = async () => {
 	return dataArr;
 };
 
-const createQuery = breweries => {
-	let query = "insert into breweries(jsondata, state, type) values ";
-	for (let i = 0; i < breweries.length; i++) {
-		if (i == breweries.length - 1) {
-			query += `(${JSON.stringify(breweries[i])}, ${breweries[i].state}, ${breweries[i].brewery_type})`;
-		} else {
-			query += `(${JSON.stringify(breweries[i])}, ${breweries[i].state}, ${breweries[i].brewery_type}), `;
-		}
-	}
-	return query;
-};
-
 /**
- * Saves single brewery to self database
- */
-const saveBreweryToDB = async breweryData => {
-	const state = breweryData.state && breweryData.state.toLowerCase();
-	const type = breweryData.brewery_type && breweryData.brewery_type.toLowerCase();
-	return PostgreSQL.client
-		.query(`insert into breweries(jsondata, state, type) values ($1, $2, $3)`, [breweryData, state, type])
-		.catch(err => console.log("[ERROR SAVING TO DB]", err));
-};
-
-/**
- * Loops Through Breweries and saves them
+ * Saves array of 150 JSON objects into database
  */
 
 const initDatabase = async () => {
 	// connects
 	await PostgreSQL.connect();
-	// Forming the query gets erros
-	// try {
-	// 	await PostgreSQL.client.query(createQuery(data));
-	// 	console.log("success");
-	// } catch (err) {
-	// 	console.log("err", err);
-	// }
 
 	/**
 	 * Adds data to database, pg-format was giving errors when inserting 150 rows in a single query, so I'm looping
 	 */
 	return new Promise(async (resolve, reject) => {
-		// Verfies data and return if data is valid
-		let rows = await retrieveAllBreweries();
-		if (rows.length === 150) {
-			console.log("[DATABASE READY]");
-			resolve();
-			return;
-		}
 		// clears data
 		await clearBreweriesDB();
 
-		// fetches data
+		// forms pg friendly values for query
 		let data = await getExternalData();
-
-		asyncLib.each(
-			data,
-			(brewery, callback) => {
-				saveBreweryToDB(brewery).then(() => {
-					callback();
-				});
-			},
-			() => {
-				console.log("[DATABASE INITIALIZED]");
-				resolve();
+		let valStr = "";
+		for (let i = 0; i < data.length; i++) {
+			if (i === data.length - 1) {
+				valStr += `($${i + 1})`;
+			} else {
+				valStr += `($${i + 1}), `;
 			}
-		);
+		}
+
+		return PostgreSQL.client
+			.query(`insert into breweries(jsondata) values ${valStr}`, [...data])
+			.then(() => {
+				console.log("[DATABASE INITIALIZED WITH 150 ROWS]");
+			})
+			.catch(err => console.log("[ERROR SAVING TO DB]", err));
 	});
 };
 
@@ -106,6 +71,58 @@ const retrieveAllBreweries = async () => {
 	}
 };
 
+// SQL JSON Query builder
+const selectJsonQuery = params => {
+	const query = {
+		text: "select jsondata from breweries ",
+		values: ["Avondale Brewing Co"]
+	};
+
+	let whereStr = `where `;
+
+	const keys = Object.keys(params);
+	const vals = Object.values(params);
+
+	for (let i = 0; i < keys.length; i++) {
+		if (i === 0) {
+			whereStr += `jsondata ->> '${keys[i]}' = $${i + 1}`;
+		} else {
+			whereStr += ` and jsondata ->> '${keys[i]}' = $${i + 1}`;
+		}
+	}
+
+	query.text += whereStr;
+	query.values = vals;
+
+	return query;
+};
+
+const updateJsonQuery = params => {
+	const query = {
+		text: "update jsondata from breweries ",
+		values: ["Avondale Brewing Co"]
+	};
+
+	let whereStr = `where `;
+
+	const keys = Object.keys(params);
+	const vals = Object.values(params);
+
+	for (let i = 0; i < keys.length; i++) {
+		if (i === 0) {
+			whereStr += `jsondata ->> '${keys[i]}' = $${i + 1}`;
+		} else {
+			whereStr += ` and jsondata ->> '${keys[i]}' = $${i + 1}`;
+		}
+	}
+
+	query.text += whereStr;
+	query.values = vals;
+
+	return query;
+};
+
+// regular SQL Query builder
 const formParamQuery = params => {
 	const query = {
 		text: "select jsondata from breweries where",
@@ -128,8 +145,11 @@ const formParamQuery = params => {
 
 const retrieveBreweriesWithParams = async params => {
 	try {
+		// Regular SQL query
 		const query = formParamQuery(params);
-		const res = await PostgreSQL.client.query(query);
+		// JSON query
+		const jsonQuery = selectJsonQuery(params);
+		const res = await PostgreSQL.client.query(jsonQuery);
 		return res.rows;
 	} catch (err) {
 		console.log("[ERROR Fetching From DB With Params]", err);
@@ -140,7 +160,7 @@ const updateSingleBrewery = async () => {
 	// Update
 	try {
 		// const query = formParamQuery(params);
-		const res = await PostgreSQL.client.query(`select jsondata from breweries where jsondata ->> 'name' = $1`, ["Avondale Brewing Co"]);
+		const res = await PostgreSQL.client.query(`select jsondata from breweries where jsondata ->> 'state' = $1 and jsondata ->> 'city' = $2`, ["California", "San Rafael"]);
 
 		return res.rows;
 	} catch (err) {
@@ -150,11 +170,11 @@ const updateSingleBrewery = async () => {
 
 module.exports = {
 	getExternalData,
-	saveBreweryToDB,
 	initDatabase,
 	clearBreweriesDB,
 	retrieveAllBreweries,
 	retrieveBreweriesWithParams,
 	updateSingleBrewery,
-	formParamQuery
+	formParamQuery,
+	selectJsonQuery
 };
