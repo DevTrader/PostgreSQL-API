@@ -13,6 +13,10 @@ module.exports = app => {
 			res.send(breweries);
 		} else {
 			const breweries = await db.retrieveBreweriesWithParams(req.query);
+			if (!breweries[0]) {
+				res.status(404);
+				return res.send(`No breweries match that query`);
+			}
 			res.send(breweries);
 		}
 	});

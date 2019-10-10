@@ -59,7 +59,6 @@ const load = app => {
 	app.use("/breweries", (req, res, next) => {
 		const queryKeys = Object.keys(req.query);
 		const queryParams = {};
-		console.log("WORKING", queryKeys);
 		// If queries, normalize data and search with params
 		if (queryKeys.length > 0) {
 			for (let i = 0; i < queryKeys.length; i++) {
@@ -81,7 +80,6 @@ const load = app => {
 			}
 			req.query = queryParams;
 		}
-		console.log(req.query, queryParams);
 		next();
 	});
 };
