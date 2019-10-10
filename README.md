@@ -42,9 +42,16 @@ Retrieves all data that matches the query.
 
 **endpoint**: https://syntx.herokuapp.com/breweries/:id
 **description**: Takes req.body (JSON) with any of the following params:
-"id","name","brewery_type","street","city","state","postal_code","country","longitude","latitude","phone","website_url","updated_at","tag_list"
+"name","brewery_type","street","city","state","postal_code","country","longitude","latitude","phone","website_url","updated_at","tag_list"
 
 Updates that brewery document with the values specified at req.body
+
+Example: https://syntx.herokuapp.com/breweries/2
+req.body = {
+"name" : "A New Name"
+}
+
+Updates brewery with id 2 to have "A New Name" as name
 
 **process**: When the endpoint detects a req.body it queries for the id of brewery and reconstructs its data, then updates it on PostgreSQL database.
 
