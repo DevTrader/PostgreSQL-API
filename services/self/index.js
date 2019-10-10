@@ -136,7 +136,17 @@ const retrieveBreweriesWithParams = async params => {
 	}
 };
 
-const updateSingleBrewery = async () => {};
+const updateSingleBrewery = async () => {
+	// Update
+	try {
+		// const query = formParamQuery(params);
+		const res = await PostgreSQL.client.query(`select jsondata from breweries where jsondata ->> 'name' = $1`, ["Avondale Brewing Co"]);
+
+		return res.rows;
+	} catch (err) {
+		console.log("[ERROR Fetching From DB With Params]", err);
+	}
+};
 
 module.exports = {
 	getExternalData,
