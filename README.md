@@ -46,5 +46,6 @@ Updates that brewery document with the values specified at req.body
 
 **process**: When the endpoint detects a req.body it queries for the id of brewery and reconstructs its data, then updates it on PostgreSQL database.
 
-##Challenges
+## Challenges
+
 I wish I had used a different library for querying PostgreSQL on node, the library I selected has some limitations when dealing with JSON data.
