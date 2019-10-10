@@ -27,28 +27,26 @@ const initDatabase = async () => {
 	/**
 	 * Adds data to database, pg-format was giving errors when inserting 150 rows in a single query, so I'm looping
 	 */
-	return new Promise(async (resolve, reject) => {
-		// clears data
-		await clearBreweriesDB();
+	// clears data
+	await clearBreweriesDB();
 
-		// forms pg friendly values for query
-		let data = await getExternalData();
-		let valStr = "";
-		for (let i = 0; i < data.length; i++) {
-			if (i === data.length - 1) {
-				valStr += `($${i + 1})`;
-			} else {
-				valStr += `($${i + 1}), `;
-			}
+	// forms pg friendly values for query
+	let data = await getExternalData();
+	let valStr = "";
+	for (let i = 0; i < data.length; i++) {
+		if (i === data.length - 1) {
+			valStr += `($${i + 1})`;
+		} else {
+			valStr += `($${i + 1}), `;
 		}
+	}
 
-		return PostgreSQL.client
-			.query(`insert into breweries(jsondata) values ${valStr}`, [...data])
-			.then(() => {
-				console.log("[DATABASE INITIALIZED WITH 150 ROWS]");
-			})
-			.catch(err => console.log("[ERROR SAVING TO DB]", err));
-	});
+	return PostgreSQL.client
+		.query(`insert into breweries(jsondata) values ${valStr}`, [...data])
+		.then(() => {
+			console.log("[DATABASE INITIALIZED WITH 150 ROWS]");
+		})
+		.catch(err => console.log("[ERROR SAVING TO DB]", err));
 };
 
 /**
@@ -156,15 +154,16 @@ const retrieveBreweriesWithParams = async params => {
 	}
 };
 
-const updateSingleBrewery = async () => {
+const updateById = async (id, data) => {
 	// Update
 	try {
 		// const query = formParamQuery(params);
-		const res = await PostgreSQL.client.query(`select jsondata from breweries where jsondata ->> 'state' = $1 and jsondata ->> 'city' = $2`, ["California", "San Rafael"]);
-
+		console.log("[before RES]", id, data);
+		const res = await PostgreSQL.client.query(`update breweries set jsondata = $1 where jsondata ->> 'id' = $2`, [data, id]);
+		console.log("[RES]", res);
 		return res.rows;
 	} catch (err) {
-		console.log("[ERROR Fetching From DB With Params]", err);
+		console.log("[ERROR Updating To DB]", err);
 	}
 };
 
@@ -174,7 +173,7 @@ module.exports = {
 	clearBreweriesDB,
 	retrieveAllBreweries,
 	retrieveBreweriesWithParams,
-	updateSingleBrewery,
+	updateById,
 	formParamQuery,
 	selectJsonQuery
 };

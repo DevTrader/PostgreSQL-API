@@ -39,16 +39,15 @@ describe("Self services tests", () => {
 			expect(brewery.jsondata.city).toBe("San Rafael");
 		});
 	});
-	// test("Update single brewery to DB", async () => {
-	// 	dbData = await self.retrieveAllBreweries();
+	test("Update single brewery to DB", async () => {
+		dbData = await self.retrieveAllBreweries();
 
-	// 	const breweryToUpdate = { ...dbData[0] };
-	// 	breweryToUpdate.name = "Nick's hoppy brewery";
+		const breweryToUpdate = { ...dbData[0].jsondata };
+		breweryToUpdate.name = "Nick's hoppy brewery";
 
-	// 	const updated = await self.updateSingleBrewery({});
-	// 	console.log("updated", updated);
-	// 	dbData = await self.retrieveAllBreweries();
+		await self.updateById(breweryToUpdate.id, breweryToUpdate);
+		const updated = await self.retrieveBreweriesWithParams({ id: breweryToUpdate.id });
 
-	// 	expect(dbData[0].name).toBe("Nick's hoppy brewery");
-	// });
+		expect(updated[0].jsondata.name).toBe("Nick's hoppy brewery");
+	});
 });

@@ -8,6 +8,7 @@ describe("Database Setup", () => {
 		let connected = false;
 		try {
 			await postgreSQL.client.connect();
+			await postgreSQL.client.end();
 			connected = true;
 		} catch (e) {
 			console.log("[CONNECTION FAILED]", e);
