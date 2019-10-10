@@ -1,6 +1,3 @@
-const asyncLib = require("async");
-const format = require("pg-format");
-
 const baseDir = process.cwd();
 const OpenBreweryDB = require(baseDir + "/services/OpenBreweryDB/index.js");
 const PostgreSQL = require(baseDir + "/services/PostgreSQL/index.js");

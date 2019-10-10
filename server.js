@@ -1,8 +1,6 @@
 const express = require("express");
-const createError = require("http-errors");
 
 const baseDir = process.cwd();
-const PostgreSQL = require(baseDir + "/services/PostgreSQL/index.js");
 const db = require(baseDir + "/services/db/index.js");
 const middleware = require(baseDir + "/middleware/index.js");
 
