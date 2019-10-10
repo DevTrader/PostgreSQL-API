@@ -122,7 +122,7 @@ const updateJsonQuery = params => {
 	return query;
 };
 
-// regular SQL Query builder
+// regular SQL Query builder -- not used
 const formParamQuery = params => {
 	const query = {
 		text: "select jsondata from breweries where",

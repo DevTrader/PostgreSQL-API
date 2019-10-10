@@ -8,6 +8,9 @@ describe("Self services tests", () => {
 	beforeAll(async () => {
 		await PostgreSQL.connect();
 	});
+	afterAll(async () => {
+		await PostgreSQL.client.end();
+	});
 	test("Retrieves 150 breweries from external API", async () => {
 		apiData = await self.getExternalData();
 		expect(apiData.length).toBe(150);
