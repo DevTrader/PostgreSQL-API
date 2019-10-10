@@ -32,8 +32,10 @@ const createQuery = breweries => {
  * Saves single brewery to self database
  */
 const saveBreweryToDB = async breweryData => {
+	const state = breweryData.state && breweryData.state.toLowerCase();
+	const type = breweryData.brewery_type && breweryData.brewery_type.toLowerCase();
 	return PostgreSQL.client
-		.query(`insert into breweries(jsondata, state, type) values ($1, $2, $3)`, [breweryData, breweryData.state, breweryData.brewery_type])
+		.query(`insert into breweries(jsondata, state, type) values ($1, $2, $3)`, [breweryData, state, type])
 		.catch(err => console.log("[ERROR SAVING TO DB]", err));
 };
 
@@ -104,7 +106,35 @@ const retrieveAllBreweries = async () => {
 	}
 };
 
-const retrieveBreweriesWithParams = async () => {};
+const formParamQuery = params => {
+	const query = {
+		text: "select jsondata from breweries where",
+		values: ["california"]
+	};
+
+	const keys = Object.keys(params);
+	const vals = Object.values(params);
+	let parameterStr = "";
+
+	for (let i = 0; i < keys.length; i++) {
+		parameterStr += ` ${keys[i]} = $${i + 1}`;
+	}
+
+	query.text += parameterStr;
+	query.values = vals;
+
+	return query;
+};
+
+const retrieveBreweriesWithParams = async params => {
+	try {
+		const query = formParamQuery(params);
+		const res = await PostgreSQL.client.query(query);
+		return res.rows;
+	} catch (err) {
+		console.log("[ERROR Fetching From DB With Params]", err);
+	}
+};
 
 const updateSingleBrewery = async () => {};
 
@@ -115,5 +145,6 @@ module.exports = {
 	clearBreweriesDB,
 	retrieveAllBreweries,
 	retrieveBreweriesWithParams,
-	updateSingleBrewery
+	updateSingleBrewery,
+	formParamQuery
 };
