@@ -15,6 +15,8 @@ app.listen(PORT, () => {
 });
 
 // Middleware
+app.use(express.json());
+
 app.use(function(req, res, next) {
 	res.setHeader("content-type", "application/json");
 	next();

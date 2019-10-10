@@ -8,7 +8,6 @@ describe("Database Setup", () => {
 		let connected = false;
 		try {
 			await postgreSQL.client.connect();
-			client.end();
 			connected = true;
 		} catch (e) {
 			console.log("[CONNECTION FAILED]", e);
@@ -21,16 +20,15 @@ describe("Database Setup", () => {
  * Sanity Checks: CRUD Tests
  */
 describe("Tests CRUD operations", () => {
-	test("Writes to database", async () => {
-		// will write
-		try {
-			const data = await postgreSQL.create("test");
-			console.log("[DATA]", data);
-		} catch (e) {
-			console.log("[WRITING FAILED]", e);
-		}
-		// expect written file to be on database
-	});
+	// test("Writes to database", async () => {
+	// 	// will write
+	// 	try {
+	// 		await postgreSQL.insert("name", "test", "Nicolas K. Sartor");
+	// 	} catch (e) {
+	// 		console.log("[WRITING FAILED]", e);
+	// 	}
+	// 	// expect written file to be on database
+	// });
 	test("Reads from database", async () => {
 		// will read
 		try {

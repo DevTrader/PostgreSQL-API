@@ -15,16 +15,23 @@ const connect = async () => {
 	}
 };
 
-// CREATE
-const create = async data => {
+// insert
+const insert = async (keys, collection, data) => {
 	try {
-	} catch (err) {}
+		await client.query(`insert into ${collection}(${keys}) values ($1)`, [data]);
+	} catch (err) {
+		console.log("[Error Inserting To Database]", err);
+	}
 };
 
 // READ
 const read = async () => {
 	try {
-	} catch (err) {}
+		const data = await client.query(`select * from test`);
+		console.log(data.rows);
+	} catch (err) {
+		console.log("[Error Selecting From Database]", err);
+	}
 };
 
 // UPDATE
@@ -42,7 +49,7 @@ const del = async () => {
 module.exports = {
 	connect,
 	client,
-	create,
+	insert,
 	read,
 	update,
 	del
