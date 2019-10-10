@@ -2,7 +2,7 @@
 
 ## Stynx Challenge - About My Process
 
-This project was created following TDD and SOLID principles, deployed on Heroku.
+This project was created following TDD and SOLID principles, deployed on Heroku (give a minute for the server to wake up, https://syntx.herokuapp.com, endpoints listed below).
 
 When the server runs it initializes the database by fetching 150 documents from: https://api.openbrewerydb.org/
 
