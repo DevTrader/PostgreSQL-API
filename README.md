@@ -1,4 +1,4 @@
-#Stynx Challenge
+# Stynx Challenge
 
 ## Stynx Challenge - About My Process
 
