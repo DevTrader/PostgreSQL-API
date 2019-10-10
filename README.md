@@ -20,6 +20,8 @@ My routes are loaded dynamicaly with fs, allowing me to scale the number of rout
 
 All my services are tested with Jest.js, and DB credentials are stored as .env
 
+Error catching happens at the service level.
+
 ## Stynx Challenge - Endpoints
 
 #### GET All
